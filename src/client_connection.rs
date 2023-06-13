@@ -47,10 +47,10 @@ impl FromStr for Command {
 
     fn from_str(s: &str) -> Result<Self> {
         match s.to_lowercase().as_ref() {
-            "left" | "l" => Ok(Command::MoveLeft),
-            "right" | "r" => Ok(Command::MoveRight),
-            "up" | "u" => Ok(Command::MoveUp),
-            "down" | "d" => Ok(Command::MoveDown),
+            "left" | "a" => Ok(Command::MoveLeft),
+            "right" | "d" => Ok(Command::MoveRight),
+            "up" | "w" => Ok(Command::MoveUp),
+            "down" | "s" => Ok(Command::MoveDown),
             "" => Ok(Command::Refresh),
             other => Err(ClientConnectionError::CommandParseError(other.to_owned())),
         }
@@ -114,7 +114,7 @@ impl ClientConnection {
             .await?;
         self.write_view_in_maze().await?;
         self.tx
-            .write_all("\navail commands: l, r, u, d\n\n>".as_bytes())
+            .write_all("\navailable commands: up, down, left, right (or use WASD)\n\n".as_bytes())
             .await?;
         Ok(())
     }
@@ -159,9 +159,11 @@ impl ClientConnection {
         self.print_interface().await?;
 
         loop {
+            self.tx.write_all("> ".as_bytes()).await?;
             // Read command
             match self.read_command().await {
                 Ok(command) => {
+                    self.tx.write_all("\n".as_bytes()).await?;
                     self.apply_command(command).await?;
                 }
                 Err(err) => {
