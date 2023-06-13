@@ -6,5 +6,6 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+owo-colors = "3.5.0"
 thiserror = "1.0.40"
 tokio = { version = "1.28.2", features = ["full"] }
