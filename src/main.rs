@@ -7,7 +7,7 @@ use tokio::net::TcpListener;
 
 #[tokio::main]
 async fn main() -> client_connection::Result<()> {
-    let addr = SocketAddr::from(([0, 0, 0, 0], 5000));
+    let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
     let listener = TcpListener::bind(addr).await?;
     println!("Starting on {}...", addr);
 

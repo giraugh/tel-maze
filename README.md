@@ -20,7 +20,7 @@ cargo run
 
 Users can now connect to it using a tpc client like netcat (`nc`)
 ```
-nc localhost 5000
+nc localhost 3000
 ```
 
 ## Contributing

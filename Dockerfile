@@ -25,5 +25,5 @@ COPY --from=builder /usr/src/app/tel-maze /app/tel-maze
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 # Run the app
-EXPOSE 5000
+EXPOSE 3000
 CMD ./tel-maze
