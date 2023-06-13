@@ -1,5 +1,6 @@
 use crate::maze::{Cell, Maze, MazeError};
 
+use owo_colors::OwoColorize;
 use std::{io, str::FromStr};
 use thiserror::Error;
 use tokio::{
@@ -82,19 +83,19 @@ impl ClientConnection {
                         let dist = ((row.pow(2) + col.pow(2)) as f32).sqrt();
                         let (x, y) = (px + col, py + row);
                         if row == 0 && col == 0 {
-                            '@'
+                            '@'.red().bold().to_string()
                         } else if dist < (radius as f32) && self.maze.in_bounds(x, y) {
                             match self
                                 .maze
                                 .get_cell(x as usize, y as usize)
                                 .unwrap_or(&Cell::Empty)
                             {
-                                Cell::Filled => '#',
-                                Cell::Goal => '*',
-                                Cell::Empty => ' ',
+                                Cell::Filled => '#'.blue().to_string(),
+                                Cell::Goal => '*'.yellow().bold().to_string(),
+                                Cell::Empty => ' '.to_string(),
                             }
                         } else {
-                            '.'
+                            '.'.to_string()
                         }
                     })
                     .collect::<String>();
@@ -110,11 +111,17 @@ impl ClientConnection {
 
     async fn print_interface(&mut self) -> Result<()> {
         self.tx
-            .write_all("~~ MAZE MASTER ~~\n\n".as_bytes())
+            .write_all("~~ MAZE MASTER ~~\n\n".bold().to_string().as_bytes())
             .await?;
         self.write_view_in_maze().await?;
         self.tx
-            .write_all("\navailable commands: up, down, left, right (or use WASD)\n\n".as_bytes())
+            .write_all(
+                format!(
+                    "\n{} up, down, left, right (or use WASD)\n\n",
+                    "available commands:".bold()
+                )
+                .as_bytes(),
+            )
             .await?;
         Ok(())
     }
